@@ -1,113 +1,154 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Tool Game</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Popup Love Message</title>
   <style>
     body {
-      background: #121212;
-      color: #fff;
-      font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding-top: 60px;
+      margin: 0;
+      background-color: black;
+      overflow: hidden;
     }
 
-    .login-box, .tool-box {
-      background: #1e1e1e;
-      border-radius: 12px;
-      padding: 25px;
-      width: 300px;
-      text-align: center;
-      box-shadow: 0 0 10px #333;
-      margin-bottom: 30px;
-    }
-
-    input[type="text"], input[type="password"] {
-      width: 90%;
-      padding: 10px;
-      margin: 8px 0;
-      border: none;
-      border-radius: 8px;
-    }
-
-    button {
-      width: 90%;
-      padding: 10px;
-      margin: 10px 0;
-      border: none;
-      border-radius: 8px;
-      background-color: #333;
+    .popup {
+      position: absolute;
+      padding: 10px 20px;
+      background-color: #F8C7DA;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      font-weight: bold;
+      font-size: 18px;
       color: white;
-      cursor: pointer;
-      transition: background 0.3s, transform 0.1s;
+      border-radius: 8px;
+      box-shadow: 0 0 10px pink;
+      animation: fadeOut 10s ease forwards;
     }
 
-    button:hover {
-      background-color: #555;
+    @keyframes fadeOut {
+      0% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(0.5); }
     }
 
-    button:active {
-      transform: scale(0.95);
-      background-color: #777;
+    .dialog {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #F8C7DA;
+      padding: 20px;
+      border-radius: 10px;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      font-size: 24px;
+      color: white;
+      text-align: center;
+      box-shadow: 0 0 15px pink;
+      z-index: 1000;
+      max-width: 80%;
+      box-sizing: border-box;
     }
 
-    .notification {
-      background-color: #28a745;
-      padding: 10px;
-      margin-top: 10px;
-      border-radius: 6px;
-      display: none;
+    /* Media Queries cho màn hình nhỏ */
+    @media screen and (max-width: 600px) {
+      .popup {
+        padding: 8px 12px;
+        font-size: 14px;
+        max-width: 150px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .dialog {
+        padding: 15px;
+        font-size: 18px;
+        max-width: 90%;
+      }
+    }
+
+    @media screen and (max-width: 400px) {
+      .popup {
+        padding: 6px 10px;
+        font-size: 12px;
+        max-width: 120px;
+      }
+
+      .dialog {
+        padding: 10px;
+        font-size: 16px;
+      }
     }
   </style>
 </head>
 <body>
+  <div id="startDialog" class="dialog">Click vào màn hình nhaaa!</div>
 
-  <div class="login-box">
-    <h2>Đăng Nhập</h2>
-    <input type="text" id="username" placeholder="Tên đăng nhập" />
-    <input type="password" id="password" placeholder="Mật khẩu" />
-    <button onclick="login()">Đăng nhập</button>
-    <p id="login-error" style="color: red; display: none;">Sai tài khoản hoặc mật khẩu</p>
-  </div>
+  <audio id="backgroundMusic" src="assets/music.mp3" loop></audio>
 
-  <div class="tool-box" id="tool-box" style="display: none;">
-    <h2>Chức năng Tool</h2>
-    <button onclick="toggleFeature('Aim Lock')">Aim Lock</button>
-    <button onclick="toggleFeature('No Recoilless')">No Recoilless</button>
-    <button onclick="toggleFeature('Fix Lag')">Fix Lag</button>
-    <button onclick="toggleFeature('Buff Màn')">Buff Màn</button>
-    <div id="notification" class="notification"></div>
-  </div>
+<script>
+  const messages = ["I Miss You !"];
+  const colors = ["white"];
+  const dialog = document.getElementById("startDialog");
+  const audio = document.getElementById("backgroundMusic");
 
-  <script>
-    const correctUsername = "admin";
-    const correctPassword = "123456";
+  function createPopup() {
+    const popup = document.createElement("div");
+    popup.className = "popup";
+    popup.textContent = messages[Math.floor(Math.random() * messages.length)];
+    popup.style.color = colors[Math.floor(Math.random() * colors.length)];
 
-    function login() {
-      const username = document.getElementById("username").value.trim();
-      const password = document.getElementById("password").value;
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
 
-      if (username === correctUsername && password === correctPassword) {
-        document.querySelector(".login-box").style.display = "none";
-        document.getElementById("tool-box").style.display = "block";
-      } else {
-        document.getElementById("login-error").style.display = "block";
+    // Điều chỉnh giới hạn vị trí để pop-up không tràn ra ngoài
+    const maxWidth = screenWidth - 150; // Giảm kích thước tối đa của pop-up
+    const maxHeight = screenHeight - 50;
+    const x = Math.floor(Math.random() * (maxWidth < 0 ? 0 : maxWidth));
+    const y = Math.floor(Math.random() * (maxHeight < 0 ? 0 : maxHeight));
+
+    popup.style.left = `${x}px`;
+    popup.style.top = `${y}px`;
+
+    document.body.appendChild(popup);
+
+    setTimeout(() => {
+      popup.remove();
+    }, 25000);
+  }
+
+  function startPopups(count) {
+    let created = 0;
+    const interval = setInterval(() => {
+      if (created >= count) {
+        clearInterval(interval);
+        return;
       }
-    }
+      createPopup();
+      created++;
+    }, 30);
+  }
 
-    function toggleFeature(featureName) {
-      const notify = document.getElementById("notification");
-      notify.innerText = `${featureName} đã được bật`;
-      notify.style.display = "block";
-      notify.style.opacity = 1;
-
-      setTimeout(() => {
-        notify.style.opacity = 0;
-        setTimeout(() => (notify.style.display = "none"), 500);
-      }, 2000);
+  function enterFullscreen() {
+    const elem = document.documentElement;
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem.mozRequestFullScreen) {
+      elem.mozRequestFullScreen();
+    } else if (elem.webkitRequestFullscreen) {
+      elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) {
+      elem.msRequestFullscreen();
     }
-  </script>
+  }
+
+  document.addEventListener("click", function startExperience() {
+    dialog.style.display = "none";
+    audio.play().catch(error => {
+      console.log("Lỗi phát nhạc:", error);
+    });
+    enterFullscreen();
+    startPopups(200);
+    document.removeEventListener("click", startExperience);
+  });
+</script>
 </body>
 </html>
