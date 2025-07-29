@@ -4,13 +4,321 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Anime Girl Shooting Hearts</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial Rounded MT Bold', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            height: 100vh;
+        }
+        
+        header {
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: white;
+            font-size: 3rem;
+            text-shadow: 0 0 10px rgba(255, 105, 180, 0.8);
+            margin-top: 20px;
+            animation: titleGlow 2s infinite alternate;
+        }
+        
+        .description {
+            color: white;
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 10px auto;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+        
+        .character-container {
+            position: absolute;
+            left: 50px;
+            bottom: 0;
+            width: 200px;
+            height: 300px;
+            z-index: 10;
+        }
+        
+        .anime-girl {
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 300"><style>.hair{fill:%23f4a7b9;}.face{fill:%23f9d5bb;}.eye{fill:%23333;}.blush{fill:%23ffb6c1;opacity:0.6;}.mouth{fill:none;stroke:%23333;stroke-width:2;}.outfit{fill:%23697bce;}.bow{fill:%23ff6b9d;}.shoe{fill:%23333;}</style><path class="hair" d="M80,50 Q120,30 150,60 Q170,100 160,140 Q140,180 120,200 Q100,220 80,210 Q60,200 50,180 Q40,150 50,120 Q60,80 80,50Z"/><circle class="face" cx="100" cy="120" r="60"/><circle class="eye" cx="80" cy="110" r="8"/><circle class="eye" cx="120" cy="110" r="8"/><circle class="blush" cx="70" cy="130" r="12"/><circle class="blush" cx="130" cy="130" r="12"/><path class="mouth" d="M90,150 Q100,160 110,150"/><path class="outfit" d="M70,180 L70,260 L130,260 L130,180 Q120,200 100,200 Q80,200 70,180Z"/><path class="bow" d="M95,180 Q100,170 105,180 Q110,190 105,200 Q100,210 95,200 Q90,190 95,180Z"/><rect class="shoe" x="70" y="260" width="20" height="20"/><rect class="shoe" x="110" y="260" width="20" height="20"/></svg>');
+            background-repeat: no-repeat;
+            background-position: bottom;
+            position: relative;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .hearts-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .heart {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%23ff4081" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>');
+            background-size: contain;
+            animation: heartFloat 5s forwards;
+            z-index: 5;
+        }
+        
+        .heart-message {
+            position: absolute;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
+            white-space: nowrap;
+            animation: messageFloat 5s forwards;
+            z-index: 6;
+        }
+        
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+        
+        button {
+            background: linear-gradient(45deg, #ff4081, #ff6b9d);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin: 5px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 10px rgba(255, 64, 129, 0.4);
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(255, 64, 129, 0.6);
+        }
+        
+        footer {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes heartFloat {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(0.5);
+            }
+            50% {
+                opacity: 0.8;
+                transform: translate(100px, -100px) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(200px, -200px) scale(0.3);
+            }
+        }
+        
+        @keyframes messageFloat {
+            0% {
+                opacity: 1;
+                transform: translate(20px, 20px);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(220px, -180px);
+            }
+        }
+        
+        @keyframes titleGlow {
+            0% { text-shadow: 0 0 10px rgba(255, 105, 180, 0.8); }
+            100% { text-shadow: 0 0 20px rgba(255, 105, 180, 1), 0 0 30px rgba(255, 105, 180, 0.8); }
+        }
+        
+        /* Hiệu ứng nền */
+        .background-effects {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .effect {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 15s infinite linear;
+        }
+    </style>
 </head>
 <body>
-    <div class="character">
-        <img src="https://i.pinimg.com/originals/2c/7a/35/2c7a35b4f4b3a5a7a1b3f2d7d0a0b3e5.png" alt="Anime Girl">
+    <div class="background-effects" id="backgroundEffects"></div>
+    
+    <div class="container">
+        <header>
+            <h1>❤️ Anime Heart Shooter ❤️</h1>
+            <p class="description">Nhân vật anime nữ đang bắn ra những trái tim kèm thông điệp dễ thương!</p>
+        </header>
+        
+        <div class="character-container">
+            <div class="anime-girl"></div>
+        </div>
+        
+        <div class="hearts-container" id="heartsContainer"></div>
+        
+        <div class="controls">
+            <button id="shootBtn">Bắn Trái Tim</button>
+            <button id="autoBtn">Tự Động Bắn</button>
+        </div>
+        
+        <footer>
+            Trang web được tạo bởi Anime Lover | Hiệu ứng CSS & JavaScript
+        </footer>
     </div>
-    <div class="hearts-container"></div>
-    <script src="script.js"></script>
+
+    <script>
+        // Mảng chứa các thông điệp dễ thương
+        const messages = [
+            "Hello!",
+            "I love you!",
+            "Be mine!",
+            "You're cute!",
+            "Hugs!",
+            "Kisses!",
+            "Sweet!",
+            "Adorable!",
+            "Cutie!",
+            "Lovely!",
+            "Xinh quá!",
+            "Dễ thương!",
+            "Thích bạn!",
+            "Yêu bạn!",
+            "Ngọt ngào!"
+        ];
+        
+        // Tham chiếu đến các phần tử DOM
+        const heartsContainer = document.getElementById('heartsContainer');
+        const shootBtn = document.getElementById('shootBtn');
+        const autoBtn = document.getElementById('autoBtn');
+        const backgroundEffects = document.getElementById('backgroundEffects');
+        
+        // Tạo hiệu ứng nền
+        function createBackgroundEffects() {
+            for (let i = 0; i < 20; i++) {
+                const effect = document.createElement('div');
+                effect.classList.add('effect');
+                
+                // Kích thước và vị trí ngẫu nhiên
+                const size = Math.random() * 100 + 50;
+                effect.style.width = `${size}px`;
+                effect.style.height = `${size}px`;
+                effect.style.left = `${Math.random() * 100}%`;
+                effect.style.top = `${Math.random() * 100}%`;
+                
+                // Thời gian animation ngẫu nhiên
+                effect.style.animationDuration = `${Math.random() * 20 + 10}s`;
+                
+                backgroundEffects.appendChild(effect);
+            }
+        }
+        
+        // Tạo một trái tim với thông điệp
+        function shootHeart() {
+            // Tạo trái tim
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            
+            // Vị trí bắt đầu (gần nhân vật)
+            const startX = 200; // Vị trí X bắt đầu
+            const startY = window.innerHeight - 150; // Vị trí Y bắt đầu
+            
+            heart.style.left = `${startX}px`;
+            heart.style.top = `${startY}px`;
+            
+            // Tạo thông điệp
+            const message = document.createElement('div');
+            message.classList.add('heart-message');
+            
+            // Chọn thông điệp ngẫu nhiên
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            message.textContent = randomMessage;
+            
+            message.style.left = `${startX + 40}px`;
+            message.style.top = `${startY}px`;
+            
+            // Thêm vào container
+            heartsContainer.appendChild(heart);
+            heartsContainer.appendChild(message);
+            
+            // Xóa sau khi animation kết thúc
+            setTimeout(() => {
+                heart.remove();
+                message.remove();
+            }, 5000);
+        }
+        
+        // Sự kiện khi nhấn nút bắn
+        shootBtn.addEventListener('click', shootHeart);
+        
+        // Chế độ tự động bắn
+        let autoShootInterval = null;
+        
+        autoBtn.addEventListener('click', () => {
+            if (autoShootInterval) {
+                clearInterval(autoShootInterval);
+                autoShootInterval = null;
+                autoBtn.textContent = "Tự Động Bắn";
+            } else {
+                autoShootInterval = setInterval(shootHeart, 800);
+                autoBtn.textContent = "Dừng Bắn";
+            }
+        });
+        
+        // Tạo hiệu ứng nền khi tải trang
+        createBackgroundEffects();
+        
+        // Bắn một trái tim khi trang tải
+        setTimeout(shootHeart, 1000);
+        
+        // Bắn liên tục cho đến khi dừng
+        autoShootInterval = setInterval(shootHeart, 1500);
+        autoBtn.textContent = "Dừng Bắn";
+    </script>
 </body>
 </html>
